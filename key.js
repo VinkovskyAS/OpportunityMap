@@ -78,7 +78,7 @@ function keySelectAll(e) {
     keyDown = true
     e.preventDefault()
 
-    querySelector = '.day-element'
+    let querySelector = '.day-element'
 
     let elements = document.querySelectorAll(querySelector)
 
