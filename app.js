@@ -1,6 +1,7 @@
 var selectedCells = new Array()
 var clipBoardDayData = ''
 
+
 $(document).click(function (e) {
 
 
@@ -64,13 +65,19 @@ function deSelectCells() {
 
 function createTable1c(days_array_JSON, tablebody_JSON, context_menu_JSON) {
 
-    days_array = JSON.parse(days_array_JSON)
+    if (days_array_JSON != ''){
+        days_array = JSON.parse(days_array_JSON)
 
-    opportunity_map.change_days(days_array)
+        opportunity_map.change_days(days_array)
+    }
 
 
     let tablebody_array = JSON.parse(tablebody_JSON)
-    let context_menu_array = JSON.parse(context_menu_JSON)
+    let context_menu_array = ''
+    if (context_menu_JSON != '') {
+        context_menu_array = JSON.parse(context_menu_JSON)
+    }
+    console.log(context_menu_array)
     // divContextMenu.contextMenuAll = context_menu_array
     opportunity_map.change_body(tablebody_array, context_menu_array)
 }
@@ -85,16 +92,8 @@ function delete_tr(e, obj) {
         return
     }
 
-
-
-
-
-
     let ref_array = opportunity_map.tablebody.map(el => el.refArray)
     let indexArray = ref_array.indexOf(array_ref)
-
-
-
 
     if (indexArray == -1) {
         return
@@ -183,8 +182,6 @@ function userMassege(textMassege) {
     modal_WindowData.UserMesage = textMassege
 }
 
-
-
 function arbitrary_time(trID, dataJson, dayId) {
 
     let data = JSON.parse(dataJson)
@@ -215,11 +212,7 @@ function arbitrary_time(trID, dataJson, dayId) {
 
 function changeStatus(e, dayStatus, buttonContextMenu = undefined) {
 
-
-
-
     let daysArray = new Array
-
 
     if (selectedCells.length == 0) {
         daysArray.push(dayId)
@@ -263,10 +256,6 @@ function changeStatus(e, dayStatus, buttonContextMenu = undefined) {
         let boundDay = cell.getAttribute('boundDay')
 
 
-
-
-
-
         if (dayStatus == 4) {
             backgroundColor = '#5A5A5A'
             name = 'Недоступен'
@@ -291,7 +280,6 @@ function changeStatus(e, dayStatus, buttonContextMenu = undefined) {
 
 
     deSelectCells()
-
 
 
 }
@@ -399,9 +387,6 @@ function change_day(trID, data, dayId, isBoundDayChange = false) {
 
     }
 
-    
-
-
     newElem = {
         name: name,
         date: dayData.date,
@@ -427,9 +412,7 @@ function change_day(trID, data, dayId, isBoundDayChange = false) {
 
         oldBoundDay.forEach(function (oldBoundDay) {
 
-
-
-            querySelector = `[dayId *= "${oldBoundDay}"]`
+            let querySelector = `[dayId *= "${oldBoundDay}"]`
 
             let elem = document.querySelector(querySelector)
 
@@ -587,3 +570,5 @@ function showHotKeyHelp() {
 
     }
 }
+
+
