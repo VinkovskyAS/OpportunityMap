@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Карта возможностей</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="change_width_date_column.js"></script>
+    <!-- <script src="context_menuV2.js"></script> -->
+
+    <!-- подключаем jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <!-- <script src="https://unpkg.com/vue@2"></script> -->
+    <!-- подключаем новый шрифт -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"> -->
+    <!-- подключаем нормализатор CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="styleV2.css">
+
+    <script type="text/x-template" id="modal-template">
+        <transition name="modal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-container">
+  
+                <div class="modal-header">
+                  <slot name="header">
+                    default header
+                  </slot>
+                </div>
+  
+                <div class="modal-body">
+                  <slot name="body">
+                    default body
+                  </slot>
+                </div>
+                <div class="modal-footer">
+                    <slot name="footer">
+                      <button class="modal-default-button" @click="$emit('close')">
+                        OK
+                      </button>
+                    </slot>
+                  </div>
+  
+              </div>
+            </div>
+          </div>
+        </transition>
+      </script>
+
+
+
+</head>
+
+<body>
+
+    <!-- модальное окно для предупреждений -->
+    <div id="modal_Window">
+        <modal v-if="showModal" @close="showModal = false">
+            <h3 slot="header">Внимание!</h3>
+            <h2 slot="body">{{UserMesage}}</h2>
+        </modal>
+    </div>
+
+
+
+    <fieldset>
+        <legend>
+
+        </legend>
+
+        <div class="container">
+            <div id="circleGreen"></div>
+            <div>&nbsp;- Доступен для работы&nbsp;</div>
+            <div id="circleBlue"></div>
+            <div>&nbsp;- Часы по рабочему графику&nbsp;</div>
+            <div id="circleLaithBlue"></div>
+            <div>&nbsp;- Часы по рабочему графику&nbsp;<br>&nbsp;&nbsp; в другой компетенции&nbsp;</div>
+            <div id="circleGray"></div>
+            <div>&nbsp;- Не доступен/уволен&nbsp;</div>
+            <div id="circleLaithGray"></div>
+            <div>&nbsp;- Отпуск/больничный&nbsp;</div>
+            <div  style="position:fixed;right:0px;top:0px;z-index:1000;"><button class="btn" onclick="showHotKeyHelp()"><span>Горячие клавишы</span></button></div>
+            <!-- <div id="circleThistle"></div>  
+                    <div>&nbsp;- Измененные данные&nbsp;</div> -->
+        </div>
+
+    </fieldset>
+
+    <div id="hotKeyTable" style="position:fixed;right:10px;top:50px;z-index:1000; display: none;">
+    <table>
+        <thead>
+            <tr>
+                <th>Клавиша</th>
+                <th>Описание</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>CTRL + &rarr;</td>
+                <td>Выделить ячейку справа</td>
+            </tr>
+            <tr>
+                <td>CTRL + &larr;</td>
+                <td>Выделить ячейку слева</td>
+            </tr>
+            <tr>
+                <td>CTRL + C</td>
+                <td>Скопировать ячейку</td>
+            </tr>
+            <tr>
+                <td>CTRL + V</td>
+                <td>Вставить ячейку</td>
+            </tr>
+            <tr>
+                <td>CTRL + A</td>
+                <td>Выделить все ячейки</td>
+            </tr>
+            <tr>
+                <td>DEL</td>
+                <td>Удалить значение в ячейке</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+
+    <!-- всё меню будет в этом блоке -->
+    <div class="menu">
+
+
+        <!-- второй раздел -->
+        <ul class="menu-list">
+            <li class="menu-item"><button id="button_list_1" class="menu-button menu-button--black"
+                    style="display: none;"><i data-feather="list"></i>
+                    <div id="div_button_list_1"></div><i data-feather="chevron-right"></i>
+                </button>
+                <!-- делаем вложенное меню -->
+                <ul class="menu-sub-list">
+                    <li class="menu-item"><button id="button_list_1_1" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_1"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_2" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_2"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_3" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_3"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_4" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_4"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_5" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_5"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_6" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_6"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_7" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_7"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_8" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_8"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_9" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_9"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_1_10" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_1_10"></div>
+                        </button></li>
+                </ul>
+                <!-- закончилось вложенное меню -->
+            </li>
+            <li class="menu-item"><button id="button_list_2" class="menu-button menu-button--black"
+                    style="display: none;"><i data-feather="list"></i>
+                    <div id="div_button_list_2"></div><i data-feather="chevron-right"></i>
+                </button>
+                <!-- делаем вложенное меню -->
+                <ul class="menu-sub-list">
+                    <li class="menu-item"><button id="button_list_2_1" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_1"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_2" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_2"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_3" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_3"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_4" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_4"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_5" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_5"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_6" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_6"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_7" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_7"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_8" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_8"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_9" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_9"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_2_10" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_2_10"></div>
+                        </button></li>
+                </ul>
+                <!-- закончилось вложенное меню -->
+            </li>
+            <li class="menu-item"><button id="button_list_3" class="menu-button menu-button--black"
+                    style="display: none;"><i data-feather="list"></i>
+                    <div id="div_button_list_3"></div><i data-feather="chevron-right"></i>
+                </button>
+                <!-- делаем вложенное меню -->
+                <ul class="menu-sub-list">
+                    <li class="menu-item"><button id="button_list_3_1" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_1"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_2" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_2"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_3" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_3"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_4" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_4"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_5" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_5"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_6" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_6"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_7" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_7"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_8" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_8"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_9" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_9"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_3_10" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_3_10"></div>
+                        </button></li>
+                </ul>
+                <!-- закончилось вложенное меню -->
+            </li>
+            <li class="menu-item"><button id="button_list_4" class="menu-button menu-button--black"
+                    style="display: none;"><i data-feather="list"></i>
+                    <div id="div_button_list_4"></div><i data-feather="chevron-right"></i>
+                </button>
+                <!-- делаем вложенное меню -->
+                <ul class="menu-sub-list">
+                    <li class="menu-item"><button id="button_list_4_1" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_1"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_2" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_2"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_3" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_3"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_4" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_4"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_5" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_5"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_6" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_6"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_7" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_7"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_8" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_8"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_9" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_9"></div>
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_4_10" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="clock"></i>
+                            <div id="div_button_list_4_10"></div>
+                        </button></li>
+                </ul>
+                <!-- закончилось вложенное меню -->
+            </li>
+            <li class="menu-item"><button id="button_list_5" class="menu-button menu-button--black"
+                    style="display: none;"><i data-feather="list"></i>
+                    <div id="div_button_list_5"></div><i data-feather="chevron-right"></i>
+                </button>
+                <!-- делаем вложенное меню -->
+                <ul class="menu-sub-list">
+                    <li class="menu-item"><button id="button_list_5_1" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_1">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_2" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_2">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_3" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_3">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_4" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_4">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_5" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_5">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_6" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_6">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_7" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_7">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_8" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_8">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_9" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_9">
+                        </button></li>
+                    <li class="menu-item"><button id="button_list_5_10" class="menu-button menu-button--green"
+                            style="display: none;"><i data-feather="square"></i>
+                            <div id="div_button_list_5_10">
+                        </button></li>
+                </ul>
+                <!-- закончилось вложенное меню -->
+            </li>
+
+        </ul>
+
+        <!-- третий раздел -->
+        <ul class="menu-list">
+            <li class="menu-item"><button id="button_arbitrary_time" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="clock"></i>Произвольное время</button></li>
+            <li class="menu-item"><button id="button_open_doc" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="search"></i>Открыть документ</button></li>
+            <li class="menu-item"><button id="button_3" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_4" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_5" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_6" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_7" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_8" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_9" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+            <li class="menu-item"><button id="button_10" class="menu-button menu-button--delete"
+                    style="display: none;"><i data-feather="menu"></i>1</button></li>
+        </ul>
+
+        <!-- третий раздел -->
+        <ul class="menu-list">
+            <li class="menu-item"><button id="button_copy" class="menu-button menu-button--delete"><i
+                        data-feather="copy"></i>Скопировать</button></li>
+            <li class="menu-item"><button id="button_paste" class="menu-button menu-button--delete"><i
+                        data-feather="layers"></i>
+                    <div id="div_button_list_paste">Вставить</div>
+                </button></li>
+        </ul>
+
+        <!-- третий раздел -->
+        <ul class="menu-list">
+            <li class="menu-item"><button id="button_delete" class="menu-button menu-button--delete"><i
+                        data-feather="trash-2"></i>Удалить часы</button></li>
+            <li class="menu-item"><button id="button_lock" class="menu-button menu-button--delete"><i
+                        data-feather="lock"></i>Недоступен</button></li>
+            <li class="menu-item"><button id="button_delete_tr" class="menu-button menu-button--delete"><i
+                        data-feather="user-minus"></i>Удалить сотрудника</button></li>
+            <li class="menu-item"><button id="button_add_tr" class="menu-button menu-button--delete"><i
+                        data-feather="user-plus"></i>Добавить сотрудника</button></li>
+        </ul>
+    </div>
+
+    <div id="opportunity_map">
+
+
+        <table id="report_tab">
+            <thead>
+                <tr>
+                    <th class="column_width_400 font_18">
+                        Ресторан<br>&nbsp;&nbsp;&nbsp;&nbsp;Компетенция<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Сотрудник<br>
+                    </th>
+
+                    <th v-for="(day, index) in days" v-bind:id="'day'+index"
+                        class="column_width_10 text_in_cell sortable" v-bind:style="{'opacity':day.opacity, 'background-color':day.backgroundColor }">
+                        <h5 v-bind:style="{'font-weight':'bold', 'color': day.textColor}">{{day.title}}</h5>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <template v-for="restoraunt in getFilteredArray(1)">
+                    <tr>
+                        <td v-bind:colspan='days.length+1' class='column_width_400 font_18 group_level_1'
+                            v-bind:array_ref="restoraunt.refArray">{{restoraunt.name}} <a style="font-style:italic; color: #008B8B; display: none">(фот: {{getWageFund(restoraunt.idLevel1)}})</a></td>
+                    </tr>
+                    <template v-for="competence in getFilteredArray(2, restoraunt.idLevel1)">
+                        <tr>
+                            <td v-bind:colspan='days.length+1' class='column_width_400 font_18 group_level_2'
+                                v-bind:array_ref="competence.refArray">&nbsp;&nbsp;&nbsp;&nbsp;{{competence.name}} <a style="font-style:italic; color: #008B8B; display: none">(фот: {{getWageFund(competence.idLevel1, competence.idLevel2)}})</a></td>
+                        </tr>
+                        <template v-for="empl in getFilteredArray(3, competence.idLevel1, competence.idLevel2)">
+                            <tr>
+                                <td v-bind:array_ref="empl.refArray"
+                                    v-bind:style="{ 'color': empl.backgroundColor, 'font-style': empl.fontStyle, }">
+                                    <span v-if="empl.isDefaultCompetence"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{empl.name}}</span>
+                                    <span v-if="!empl.isDefaultCompetence"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#9888;{{empl.name}}</span>
+                                </td>
+                                    
+
+                                <td v-for="(day, index) in empl.days"
+                                    v-bind:style="{ 'background-color': day.backgroundColor}"
+                                    v-bind:id="'Sotr'+empl.refArray+'_day'+index" 
+                                    v-bind:context_menu='day.dayId'
+                                    v-bind:dayId='day.dayId' 
+                                    v-bind:array_ref="empl.refArray" 
+                                    v-bind:title="day.name"
+                                    v-bind:boundDay="day.boundDay" 
+                                    v-bind:isDefaultCompetence="day.isDefaultCompetence"
+                                    :opacity="day.opacity"
+                                    :docRef="day.docRef"
+                                    v-bind:dayDate="day.date"
+                                    
+                                    v-bind:class="day.className"></v-bind:class>
+                                    
+                                    <div :id="'div_Sotr'+index+'_day'+index" style='display: none;' class='text_cent'
+                                        data_for_1c=''
+                                        v-bind:style="{ 'color':day.textColor}">{{day.name}}</div>
+                                    </td>
+
+                            </tr>
+                        </template>
+                    </template>
+                </template>
+
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+    <!-- подключаем jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <!-- подключаем иконки-->
+    <script src='https://unpkg.com/feather-icons@4.29.0/dist/feather.min.js'></script>
+
+    <script>
+        // рисуем стильные иконки
+        feather.replace();
+        // скрываем контекстное меню
+        $("div.menu").hide();
+    </script>
+
+    <!-- Отключаем контекстное меню по умолчанию -->
+    <script type="text/javascript">
+        $("body").on("contextmenu", false);
+    </script>
+    <!-- Отключаем контекстное меню по умолчанию -->
+
+    <script>
+
+        var opportunity_map = new Vue({
+            el: '#opportunity_map',
+            data: {
+                days: [],
+                tablebody: [],
+                context_menu: [],
+
+            },
+
+            methods: {
+                change_days: function (days_array) {
+                    this.days = days_array
+                },
+                change_body: function (tablebody_array, context_menu_array) {
+                    this.tablebody = tablebody_array;
+                    this.context_menu = context_menu_array;
+                },
+                getFilteredArray: function (level, idLevel1 = '', idLevel2 = '') {
+   
+                    FilteredArray = this.tablebody.filter(function (elem) {
+                        
+                        return (elem.level === level) && ((idLevel1 === '') ? true : elem.idLevel1 === idLevel1) && ((idLevel2 === '') ? true : elem.idLevel2 === idLevel2)
+
+
+                    })
+                    
+                    return FilteredArray
+                },
+                getWageFund: function(idLevel1 = '', idLevel2 = '') {
+
+                    FilteredArray = this.tablebody.filter(function (elem) {
+                        
+                        return (elem.idEmploee!= '') && ((idLevel1 === '') ? true : elem.idLevel1 === idLevel1) && ((idLevel2 === '') ? true : elem.idLevel2 === idLevel2)
+
+
+                    })
+
+                    let WageFund = 0
+                    FilteredArray.forEach(element => {
+                        daysArray = element.days
+                        daysArray.forEach(day=>{
+                            if (!day.readOnly){
+                                if(day.rate==undefined || day.numberOfHours==undefined){
+                                    WageFund =WageFund+0  
+                                }
+                                else {WageFund = WageFund+day.rate*day.numberOfHours }
+                            }
+                        })
+                    });
+
+                    return WageFund
+
+                },
+
+            }
+        }
+
+        );
+
+        // register modal component
+        var modal_Window = Vue.component("modal", {
+            template: "#modal-template"
+        });
+
+        // start app
+        var modal_WindowData = new Vue({
+            el: "#modal_Window",
+            data: {
+                showModal: false,
+                UserMesage: ""
+            }
+        });
+
+
+    </script>
+    <script src="context_menuV2.js"></script>
+    <script src="app.js"></script>
+    <script src="key.js"></script>
+</body>
+
+</html>
