@@ -1,6 +1,6 @@
 var selectedCells = new Array()
 var clipBoardDayData = ''
-var dayCollapse = true
+
 
 $(document).click(function (e) {
 
@@ -571,38 +571,4 @@ function showHotKeyHelp() {
     }
 }
 
-function collapseExpandDays(){
-    let style = 'none'
-    let width = '10px'
-    console.log(dayCollapse)
-    if (dayCollapse){
-        style=''
-        width = '100px'
-    }
 
-    let querySelector = 'td_display_none'
-    let allElements = document.getElementsByTagName(querySelector)
-    let a = Array.from(allElements)
-    console.log(a)
-
-    a.forEach(function (elem) {
-
-        elem.style.width = width
-
-    })
-
-
-    querySelector = 'div_display_none'
-    allElements = document.getElementsByTagName(querySelector)
-
-    a = Array.from(allElements)
-    console.log(a)
-
-    a.forEach(function (elem) {
-
-      elem.style.display = style
-
-    })
-    dayCollapse = !dayCollapse
-
-}

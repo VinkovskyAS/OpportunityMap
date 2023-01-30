@@ -80,7 +80,7 @@
             <div>&nbsp;- Не доступен/уволен&nbsp;</div>
             <div id="circleLaithGray"></div>
             <div>&nbsp;- Отпуск/больничный&nbsp;</div>
-            <div  style="position:fixed;right:170px;top:0px;z-index:1000;"><button class="btn" onclick="collapseExpandDays()"><span>Свернуть/Развернуть дни</span></button></div>
+            <div  style="position:fixed;right:170px;top:0px;z-index:1000;"><button id="collapseExpandDays" class="btn"><span>Свернуть/Развернуть дни</span></button></div>
             <div  style="position:fixed;right:0px;top:0px;z-index:1000;"><button class="btn" onclick="showHotKeyHelp()"><span>Горячие клавишы</span></button></div>
 
             <!-- <div id="circleThistle"></div>  
@@ -478,11 +478,11 @@
                                     :opacity="day.opacity"
                                     :docRef="day.docRef"
                                     v-bind:dayDate="day.date"
-                                    td_display_none=""
+                                    td_display_none="yes"
                                     
                                     v-bind:class="day.className"></v-bind:class>
                                     
-                                    <div :id="'div_Sotr'+index+'_day'+index" style='display: none;' class='text_cent' div_display_none=""
+                                    <div :id="'div_Sotr'+index+'_day'+index" style='display: none;' class='text_cent' div_display_none="yes"
                                         data_for_1c=''
                                         v-bind:style="{ 'color':day.textColor}">{{day.name}}</div>
                                     </td>
